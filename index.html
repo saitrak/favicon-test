@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raidpo AI - Ultimate AI Tools for Every Need</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpg" href="https://res.cloudinary.com/dml8j7b8w/image/upload/v1751789491/mdn2l6rtcu2q2e1czstt.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+      background-color: #0f0f0f;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3 {
+      font-weight: bold;
+      margin: 0;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Homepage */
+    .homepage {
+      display: none;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ff6f61, #ff3b2f);
+    }
+
+    .hero-content {
+      z-index: 1;
+    }
+
+    .hero-content h1 {
+      font-size: 4.5rem;
+      margin-bottom: 1rem;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .hero-content p {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      animation: fadeIn 3s ease-in-out;
+    }
+
+    .cta-button {
+      padding: 1rem 2rem;
+      background-color: #fff;
+      color: #ff3b2f;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      transition: transform 0.3s, background-color 0.3s;
+      animation: bounce 2s infinite;
+    }
+
+    .cta-button:hover {
+      background-color: #ff6f61;
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Tool Categories */
+    .tool-categories {
+      padding: 4rem 2rem;
+      background-color: #1a1a1a;
+      text-align: center;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .tool-card {
+      background-color: #333;
+      padding: 2rem;
+      border-radius: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #ff6f61, #ff3b2f);
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: -1;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(255, 111, 97, 0.3);
+    }
+
+    .tool-card:hover::before {
+      opacity: 1;
+    }
+
+    .tool-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #ff6f61;
+    }
+
+    .tool-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tool-card p {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .tool-card a {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #ff6f61;
+      color: #fff;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+
+    .tool-card a:hover {
+      background-color: #ff3b2f;
+    }
+
+    /* Footer */
+    footer {
+      padding: 2rem;
+      background-color: #0f0f0f;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-links {
+      margin-bottom: 1rem;
+    }
+
+    .footer-links a {
+      margin: 0 0.5rem;
+      color: #ccc;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: #ff6f61;
+    }
+
+    .social-links {
+      margin-bottom: 1rem;
+    }
+
+    .social-links a {
+      margin: 0 0.5rem;
+      font-size: 1.5rem;
+      transition: color 0.3s;
+    }
+
+    .social-links a:hover {
+      color: #ff6f61;
+    }
+
+    /* User Profile */
+    .user-profile {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ff6f61;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .user-profile-info {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background-color: #1a1a1a;
+      border-radius: 5px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      display: none;
+      width: 250px;
+      z-index: 101;
+    }
+
+    .user-profile-info.active {
+      display: block;
+    }
+
+    .user-profile-name {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .user-profile-email {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-bottom: 0.5rem;
+    }
+
+    .user-profile-uid {
+      font-size: 0.8rem;
+      color: #888;
+      word-break: break-all;
+    }
+
+    .user-profile-link {
+      display: block;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background-color: #ff6f61;
+      color: #fff;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    /* Login Button */
+    .login-button {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 100;
+      padding: 0.5rem 1rem;
+      background-color: #ff6f61;
+      color: #fff;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+    }
+
+    /* Settings Page */
+    .settings-page {
+      display: none;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .settings-page h2 {
+      margin-bottom: 1.5rem;
+      color: #ff6f61;
+    }
+
+    .settings-section {
+      background-color: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .settings-section h3 {
+      margin-bottom: 1rem;
+    }
+
+    .settings-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid #333;
+    }
+
+    .settings-option:last-child {
+      border-bottom: none;
+    }
+
+    .settings-option label {
+      flex: 1;
+    }
+
+    .settings-option select,
+    .settings-option input {
+      padding: 0.5rem;
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 5px;
+    }
+
+    .settings-option select:focus,
+    .settings-option input:focus {
+      outline: none;
+      border-color: #ff6f61;
+    }
+
+    .settings-save {
+      padding: 0.8rem 1.5rem;
+      background-color: #ff6f61;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    /* Profile Page */
+    .profile-page {
+      display: none;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .profile-page h2 {
+      margin-bottom: 1.5rem;
+      color: #ff6f61;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      background-color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-email {
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    .profile-uid {
+      font-size: 0.9rem;
+      color: #888;
+      word-break: break-all;
+      margin-bottom: 1rem;
+    }
+
+    .profile-stats {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .profile-stat {
+      text-align: center;
+    }
+
+    .profile-stat-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ff6f61;
+    }
+
+    .profile-stat-label {
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+
+    .profile-section {
+      background-color: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-section h3 {
+      margin-bottom: 1rem;
+    }
+
+    .profile-form-group {
+      margin-bottom: 1rem;
+    }
+
+    .profile-form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #ccc;
+    }
+
+    .profile-form-group input,
+    .profile-form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 5px;
+    }
+
+    .profile-form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .profile-save {
+      padding: 0.8rem 1.5rem;
+      background-color: #ff6f61;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Back Button */
+    .back-button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #333;
+      color: #fff;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-content h1 {
+        font-size: 3rem;
+      }
+      
+      .hero-content p {
+        font-size: 1.2rem;
+      }
+      
+      .tool-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .profile-stats {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Homepage (hidden initially) -->
+  <div class="homepage" id="homepage">
+    <!-- User Profile -->
+    <div class="user-profile" id="userProfile">
+      <div class="user-avatar" id="userAvatar">
+        <i class="fas fa-user" id="defaultAvatarIcon"></i>
+      </div>
+      <div class="user-profile-info" id="userProfileInfo">
+        <div class="user-profile-name" id="userProfileName"></div>
+        <div class="user-profile-email" id="userProfileEmail"></div>
+        <div class="user-profile-uid" id="userProfileUid"></div>
+        <a href="/account-settings" class="user-profile-link">Account Settings</a>
+      </div>
+    </div>
+
+    <!-- Login Button (shown when not logged in) -->
+    <a href="https://raidpo-ai.netlify.app/login-form" class="login-button" id="loginButton">Login</a>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Raidpo AI</h1>
+        <p>Ultimate AI Tools - Free, Fast, and Powerful</p>
+        <a href="#tools" class="cta-button">Explore Tools</a>
+      </div>
+    </section>
+
+    <!-- Tool Categories -->
+    <section id="tools" class="tool-categories">
+      <div class="tool-grid">
+        <!-- CodeCraft Pro -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-code"></i></div>
+          <h3>CodeCraft Pro</h3>
+          <p>Write, preview, merge, and separate HTML, CSS, and JavaScript code.</p>
+          <a href='/codecraft-pro'>Use Tool</a>
+        </div>
+
+        <!-- Book Library -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-book"></i></div>
+          <h3>Book Library</h3>
+          <p>Search and read legal books directly in the app.</p>
+          <a href='/book-library'>Use Tool</a>
+        </div>
+
+        <!-- Age Calculator -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-calculator"></i></div>
+          <h3>Age Calculator</h3>
+          <p>Calculate your age in years, months, and days.</p>
+          <a href='/age-calculator'>Use Tool</a>
+        </div>
+
+        <!-- QR Code to Link -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-qrcode"></i></div>
+          <h3>QR Code to Link</h3>
+          <p>Extract links or text from QR codes.</p>
+          <a href='/qr-code-to-link'>Use Tool</a>
+        </div>
+
+        <!-- QR Code Generator -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-qrcode"></i></div>
+          <h3>QR Code Generator</h3>
+          <p>Generate QR codes for URLs or text.</p>
+          <a href='/qr-code-generator'>Use Tool</a>
+        </div>
+
+        <!-- URL Shortener -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-link"></i></div>
+          <h3>URL Shortener</h3>
+          <p>Shorten your URLs with ease.</p>
+          <a href='/url-shortener'>Use Tool</a>
+        </div>
+
+        <!-- Image to Prompt -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-image"></i></div>
+          <h3>Image to Prompt</h3>
+          <p>Generate accurate prompts from any image.</p>
+          <a href='/image-to-prompt'>Use Tool</a>
+        </div>
+
+        <!-- Image Compressor -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-file-image"></i></div>
+          <h3>Image Compressor</h3>
+          <p>Reduce image size without losing quality.</p>
+          <a href='/img-compressor'>Use Tool</a>
+        </div>
+
+        <!-- Background Remover -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-eraser"></i></div>
+          <h3>Background Remover</h3>
+          <p>Remove backgrounds from images instantly with AI.</p>
+          <a href='/bg-remover'>Use Tool</a>
+        </div>
+
+        <!-- Image Resizer -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-expand"></i></div>
+          <h3>Image Resizer</h3>
+          <p>Resize images to any dimension while maintaining quality.</p>
+          <a href='/img-resizer'>Use Tool</a>
+        </div>
+
+        <!-- Image Enhancer -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-magic"></i></div>
+          <h3>Image Enhancer</h3>
+          <p>Enhance image quality with AI-powered tools.</p>
+          <a href='/img-enhance'>Use Tool</a>
+        </div>
+
+        <!-- Text-to-Image Generator -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-paint-brush"></i></div>
+          <h3>Text-to-Image Generator</h3>
+          <p>Transform text into stunning images with AI.</p>
+          <a href='/text-to-image'>Use Tool</a>
+        </div>
+
+        <!-- All Language Translator -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-language"></i></div>
+          <h3>All Language Translator</h3>
+          <p>Translate text from any language to any language instantly.</p>
+          <a href='/translator'>Use Tool</a>
+        </div>
+
+        <!-- Text to Speech -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-comment-dots"></i></div>
+          <h3>Text to Speech</h3>
+          <p>Convert text to speech and download the audio file.</p>
+          <a href='/text-to-speech'>Use Tool</a>
+        </div>
+
+        <!-- Knowledge Nexus -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-book"></i></div>
+          <h3>Knowledge Nexus</h3>
+          <p>Explore knowledge, images, and more with AI.</p>
+          <a href='/knowledge-nexus'>Use Tool</a>
+        </div>
+
+        <!-- Currency Converter -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-money-bill-wave"></i></div>
+          <h3>Currency Converter</h3>
+          <p>Convert currencies in real-time with the latest exchange rates.</p>
+          <a href='/currency-converter'>Use Tool</a>
+        </div>
+
+        <!-- YouTube Thumbnail Downloader -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-image"></i></div>
+          <h3>YouTube Thumbnail Downloader</h3>
+          <p>Download high-quality thumbnails from YouTube videos.</p>
+          <a href='/youtube-thumbnail-downloader'>Use Tool</a>
+        </div>
+
+        <!-- ImageFlow -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+          <h3>ImageFlow</h3>
+          <p>Upload and manage images with ease.</p>
+          <a href='/imageflow'>Use Tool</a>
+        </div>
+
+        <!-- Hangman Game -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-gamepad"></i></div>
+          <h3>Hangman Game</h3>
+          <p>Play the classic Hangman game with AI-generated words.</p>
+          <a href="/Hangman-Game.html">Play Now</a>
+        </div>
+
+        <!-- Weather App -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-cloud-sun"></i></div>
+          <h3>Weather App</h3>
+          <p>Get real-time weather updates for any city.</p>
+          <a href='/weather-app'>Use Tool</a>
+        </div>
+
+        <!-- Interactive Story Generator -->
+        <div class="tool-card">
+          <div class="tool-icon"><i class="fas fa-pen"></i></div>
+          <h3>Interactive Story Generator</h3>
+          <p>Create unique stories with AI-powered storytelling.</p>
+          <a href='/interactive-story-generator'>Use Tool</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href='/terms-and-conditions'>Terms & Conditions</a>
+          <a href='/privacy-policy'>Privacy Policy</a>
+          <a href='/about-us'>About Us</a>
+          <a href='/learn-more'>Learn More</a>
+        </div>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p>© 2025 Raidpo AI | Free & Powerful AI Tools</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Settings Page -->
+  <div class="settings-page" id="settingsPage">
+    <a href="#" class="back-button" id="settingsBackBtn"><i class="fas fa-arrow-left"></i> Back</a>
+    <h2>Settings</h2>
+    
+    <div class="settings-section">
+      <h3>Account Settings</h3>
+      <div class="settings-option">
+        <label for="accountVisibility">Account Visibility</label>
+        <select id="accountVisibility">
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
+      </div>
+      <div class="settings-option">
+        <label for="emailNotifications">Email Notifications</label>
+        <select id="emailNotifications">
+          <option value="enabled">Enabled</option>
+          <option value="disabled">Disabled</option>
+        </select>
+      </div>
+    </div>
+    
+    <button class="settings-save" id="settingsSaveBtn">Save Settings</button>
+  </div>
+
+  <!-- Profile Page -->
+  <div class="profile-page" id="profilePage">
+    <a href="#" class="back-button" id="profileBackBtn"><i class="fas fa-arrow-left"></i> Back</a>
+    <h2>Your Profile</h2>
+    
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar">
+        <i class="fas fa-user" id="profileDefaultAvatar"></i>
+      </div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName"></div>
+        <div class="profile-email" id="profileEmail"></div>
+        <div class="profile-uid" id="profileUid"></div>
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <div class="profile-stat-value" id="toolsUsed">0</div>
+            <div class="profile-stat-label">Tools Used</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-value" id="memberSince">2025</div>
+            <div class="profile-stat-label">Member Since</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="profile-section">
+      <h3>Personal Information</h3>
+      <div class="profile-form-group">
+        <label for="profileFullName">Full Name</label>
+        <input type="text" id="profileFullName" placeholder="Enter your full name">
+      </div>
+      <div class="profile-form-group">
+        <label for="profileBio">Bio</label>
+        <textarea id="profileBio" placeholder="Tell us about yourself"></textarea>
+      </div>
+      <button class="profile-save" id="profileSaveBtn">Save Profile</button>
+    </div>
+  </div>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnXZuupUuEU-YQINri3isg_k2av1p4bHY",
+      authDomain: "raidpo-ai-3c84b.firebaseapp.com",
+      projectId: "raidpo-ai-3c84b",
+      storageBucket: "raidpo-ai-3c84b.firebasestorage.app",
+      messagingSenderId: "41213161184",
+      appId: "1:41213161184:web:58604fc48f2c026f5aaa85",
+      measurementId: "G-7MBZHVFCZR"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // DOM Elements
+    const homepage = document.getElementById('homepage');
+    const settingsPage = document.getElementById('settingsPage');
+    const profilePage = document.getElementById('profilePage');
+    const userProfile = document.getElementById('userProfile');
+    const userAvatar = document.getElementById('userAvatar');
+    const userProfileInfo = document.getElementById('userProfileInfo');
+    const userProfileName = document.getElementById('userProfileName');
+    const userProfileEmail = document.getElementById('userProfileEmail');
+    const userProfileUid = document.getElementById('userProfileUid');
+    const defaultAvatarIcon = document.getElementById('defaultAvatarIcon');
+    const profileBtn = document.getElementById('profileBtn');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const signOutBtn = document.getElementById('signOutBtn');
+    const settingsBackBtn = document.getElementById('settingsBackBtn');
+    const profileBackBtn = document.getElementById('profileBackBtn');
+    const settingsSaveBtn = document.getElementById('settingsSaveBtn');
+    const profileSaveBtn = document.getElementById('profileSaveBtn');
+    const profileAvatar = document.getElementById('profileAvatar');
+    const profileDefaultAvatar = document.getElementById('profileDefaultAvatar');
+    const profileName = document.getElementById('profileName');
+    const profileEmail = document.getElementById('profileEmail');
+    const profileUid = document.getElementById('profileUid');
+    const profileFullName = document.getElementById('profileFullName');
+    const profileBio = document.getElementById('profileBio');
+    const toolsUsed = document.getElementById('toolsUsed');
+    const toolLinks = document.querySelectorAll('.tool-card a');
+    const loginButton = document.getElementById('loginButton');
+
+    // Track tools used
+    let toolsUsedCount = 0;
+
+    // Show profile info on hover
+    userAvatar.addEventListener('mouseenter', () => {
+      userProfileInfo.classList.add('active');
+    });
+
+    userProfile.addEventListener('mouseleave', () => {
+      userProfileInfo.classList.remove('active');
+    });
+
+    // Update user profile with photo if available
+    function updateUserProfile(user) {
+      if (user) {
+        // Show profile icon and hide login button
+        userProfile.style.display = 'flex';
+        loginButton.style.display = 'none';
+
+        // Main avatar
+        if (user.photoURL) {
+          userAvatar.style.backgroundImage = `url(${user.photoURL})`;
+          defaultAvatarIcon.style.display = 'none';
+        } else {
+          userAvatar.style.backgroundImage = '';
+          defaultAvatarIcon.style.display = 'flex';
+        }
+
+        // Profile info
+        userProfileName.textContent = user.displayName || 'User';
+        userProfileEmail.textContent = user.email || '';
+        userProfileUid.textContent = `UID: ${user.uid}`;
+
+        // Profile page elements
+        if (user.photoURL) {
+          profileAvatar.style.backgroundImage = `url(${user.photoURL})`;
+          profileDefaultAvatar.style.display = 'none';
+        } else {
+          profileAvatar.style.backgroundImage = '';
+          profileDefaultAvatar.style.display = 'flex';
+        }
+        
+        profileName.textContent = user.displayName || 'User';
+        profileEmail.textContent = user.email || '';
+        profileUid.textContent = `UID: ${user.uid}`;
+        profileFullName.value = user.displayName || '';
+        
+        // Set member since year
+        const memberSince = document.getElementById('memberSince');
+        if (user.metadata && user.metadata.creationTime) {
+          const creationDate = new Date(user.metadata.creationTime);
+          memberSince.textContent = creationDate.getFullYear();
+        }
+      } else {
+        // Show login button and hide profile icon
+        userProfile.style.display = 'none';
+        loginButton.style.display = 'block';
+      }
+    }
+
+    // Navigation between pages
+    profileBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      homepage.style.display = 'none';
+      settingsPage.style.display = 'none';
+      profilePage.style.display = 'block';
+      userProfileInfo.classList.remove('active');
+    });
+
+    settingsBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      homepage.style.display = 'none';
+      profilePage.style.display = 'none';
+      settingsPage.style.display = 'block';
+      userProfileInfo.classList.remove('active');
+    });
+
+    settingsBackBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      settingsPage.style.display = 'none';
+      profilePage.style.display = 'none';
+      homepage.style.display = 'block';
+    });
+
+    profileBackBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      profilePage.style.display = 'none';
+      settingsPage.style.display = 'none';
+      homepage.style.display = 'block';
+    });
+
+    // Save settings
+    settingsSaveBtn.addEventListener('click', () => {
+      alert('Settings saved successfully!');
+      homepage.style.display = 'block';
+      settingsPage.style.display = 'none';
+    });
+
+    // Save profile
+    profileSaveBtn.addEventListener('click', () => {
+      const newName = profileFullName.value;
+      if (newName) {
+        auth.currentUser.updateProfile({
+          displayName: newName
+        }).then(() => {
+          updateUserProfile(auth.currentUser);
+          alert('Profile updated successfully!');
+          homepage.style.display = 'block';
+          profilePage.style.display = 'none';
+        });
+      } else {
+        alert('Please enter your full name');
+      }
+    });
+
+    // Track tool usage
+    toolLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        if (!auth.currentUser) {
+          e.preventDefault();
+          window.location.href = 'https://raidpo-ai.netlify.app/login-form';
+        } else {
+          toolsUsedCount++;
+          toolsUsed.textContent = toolsUsedCount;
+        }
+      });
+    });
+
+    // Check Auth State
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in
+        homepage.style.display = 'block';
+        settingsPage.style.display = 'none';
+        profilePage.style.display = 'none';
+        
+        // Show user profile
+        updateUserProfile(user);
+      } else {
+        // User is signed out
+        homepage.style.display = 'block';
+        settingsPage.style.display = 'none';
+        profilePage.style.display = 'none';
+        updateUserProfile(null);
+      }
+    });
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Show homepage by default
+      homepage.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
